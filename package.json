@@ -1,0 +1,25 @@
+{
+  "name": "party-server",
+  "version": "0.1.0",
+  "description": "Server for creating \"parties\" of shared state with one host and multiple guests",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=dev nodemon --inspect index.js",
+    "deploy": "now --dotenv --public"
+  },
+  "author": "Shawn Inder <shawninder@gmail.com>",
+  "contributors": ["Shawn Inder <shawninder@gmail.com>"],
+  "license": "GPL-3.0",
+  "dependencies": {
+    "lodash.clonedeep": "^4.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shawninder/party-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shawninder/party-server/issues"
+  },
+  "homepage": "https://github.com/shawninder/party-server#readme",
+  "engines": {}
+}
