@@ -1,6 +1,13 @@
 const pull = require('lodash.pull')
 const io = require('socket.io')()
 
+const log = process.env.NODE_ENV === 'dev'
+  ? console.log
+  : () => {
+    // Don't log in production
+    // to avoid busting rate limit
+  }
+
 const parties = {}
 
 function startParty ({ req, resolve, reject, client }) {
@@ -17,7 +24,7 @@ function startParty ({ req, resolve, reject, client }) {
         state: req.state
       }
       resolve()
-      console.log(`Started party ${req.name}`)
+      log(`Started party ${req.name}`)
     } else {
       reject("Can't start party, no socketKey")
     }
@@ -34,7 +41,7 @@ function stopParty ({ req, resolve, reject }) {
     })
     delete parties[req.name]
     resolve()
-    console.log(`Stopped party ${req.name}`)
+    log(`Stopped party ${req.name}`)
   } else {
     reject("Can't stop party, it doesn't exist!")
   }
@@ -53,7 +60,7 @@ function joinParty ({ req, resolve, reject, client }) {
       resolve({
         state: party.state
       })
-      console.log(`${req.socketKey} joined ${req.name}`)
+      log(`${req.socketKey} joined ${req.name}`)
     }
   } else {
     reject("Can't join party, it doesn't exist!")
@@ -65,7 +72,7 @@ function leaveParty ({ req, resolve, reject, client }) {
     if (parties[req.name].guests.includes(client)) {
       pull(parties[req.name].guests, client)
       resolve()
-      console.log(`${req.socketKey} left ${req.name}`)
+      log(`${req.socketKey} left ${req.name}`)
     } else {
       reject("Can't leave party, you're not attending!")
     }
@@ -82,7 +89,7 @@ function handleState (client) {
         data
       }
       client.emit('err', err)
-      console.log('rejecting', err)
+      log('rejecting', err)
     }
     const party = parties[data.name]
     if (party) {
@@ -91,7 +98,7 @@ function handleState (client) {
         party.guests.forEach((guest) => {
           guest.emit('state', party.state)
         })
-        console.log('transmitted state')
+        log('transmitted state')
       } else {
         reject("Can't accept state, you are not host of this party.")
       }
@@ -107,35 +114,35 @@ function isParty ({ req, resolve }) {
       exists: true,
       name: req.name
     })
-    console.log(`${req.name} is a party`)
+    log(`${req.name} is a party`)
   } else {
     resolve({
       exists: false,
       name: req.name
     })
-    console.log(`${req.name} isn't a party`)
+    log(`${req.name} isn't a party`)
   }
 }
 
 function handleGuestDispatch (client, req) {
   return (action) => {
-    console.log('GUEST DISPATCH', action)
+    log('GUEST DISPATCH', action)
     const reject = (msg) => {
       const err = {
         msg,
         data: action
       }
       client.emit('err', err)
-      console.log('rejecting', err)
+      log('rejecting', err)
     }
     const party = parties[action.name]
     if (party) {
       if (party.guests.includes(client)) {
         // TODO search for "emit" and guard thusly?
         if (party.host && party.host.connected) {
-          console.log('dispatching to host', action)
+          log('dispatching to host', action)
           party.host.emit('dispatch', action)
-          console.log('dispatched', action)
+          log('dispatched', action)
         } else {
           reject("Can't reach host")
         }
@@ -149,13 +156,13 @@ function handleGuestDispatch (client, req) {
 }
 function handleSlice (client, req) {
   return (action) => {
-    console.log('HOST DISPATCH', action)
+    log('HOST DISPATCH', action)
     const reject = (msg) => {
       const err = {
         msg,
         data: action
       }
-      console.log('rejecting', err)
+      log('rejecting', err)
       client.emit('err', err)
     }
     if (action.type === 'Party:slice') {
@@ -163,13 +170,13 @@ function handleSlice (client, req) {
       if (party) {
         if (party.host === client) {
           party.state = action.slice
-          console.log('party.state', party.state)
-          console.log('action', action)
+          log('party.state', party.state)
+          log('action', action)
           party.guests.forEach((guest) => {
             guest.emit('slice', action.slice)
-            console.log('emitted slice', action)
+            log('emitted slice', action)
           })
-          console.log(`dispatch forwarded to ${party.guests.length} guests`, action)
+          log(`dispatch forwarded to ${party.guests.length} guests`, action)
         } else {
           reject("Can't dispatch host action, you're not the host!")
         }
@@ -212,7 +219,7 @@ function reconnect ({ req, resolve, reject, client }) {
         resolve({
           state: party.state
         })
-        console.log(`${req.socketKey} rejoined ${req.name}`)
+        log(`${req.socketKey} rejoined ${req.name}`)
         resolve({ state: party.state })
       }
     } else {
@@ -227,17 +234,17 @@ function reconnect ({ req, resolve, reject, client }) {
 
 function handleRequest (client) {
   return (req) => {
-    console.log('REQUEST', req.reqName)
+    log('REQUEST', req.reqName)
     const resolve = (res) => {
       const obj = {
         req,
         res
       }
       client.emit('response', obj)
-      console.log('RESPONSE', obj)
+      log('RESPONSE', obj)
     }
     const reject = (msg) => {
-      console.log('rejecting', msg)
+      log('rejecting', msg)
       client.emit('response', {
         req,
         err: msg
@@ -263,7 +270,7 @@ function handleRequest (client) {
         reconnect({ req, resolve, reject, client })
         break
       default:
-        console.log('Unrecognized request', req.reqName)
+        log('Unrecognized request', req.reqName)
         reject('Unrecognized request')
         break
     }
@@ -272,14 +279,14 @@ function handleRequest (client) {
 
 function onConnection (client) {
   // auth until it's delegated to another micro-service?
-  console.log('connection')
+  log('connection')
   client.on('request', handleRequest(client))
   client.on('slice', handleState(client))
   client.on('disconnect', () => {
-    console.log('disconnection')
+    log('disconnection')
   })
   client.on('*', () => {
-    console.log('Unkwnown event', arguments)
+    log('Unkwnown event', arguments)
   })
 }
 
@@ -289,7 +296,7 @@ function handleHostDisconnect (client, data) {
     if (party) {
       party.timer = setTimeout(() => {
         // TODO separate the various concerns out of functions like stopParty
-        stopParty({ req: data, resolve: () => {}, reject: console.log })
+        stopParty({ req: data, resolve: () => {}, reject: log })
       }, 20 * 60 * 1000)
     }
   }
