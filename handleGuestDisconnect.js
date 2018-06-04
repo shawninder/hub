@@ -4,7 +4,7 @@ module.exports = exports = function handleGuestDisconnect ({ client, req, partie
   return () => {
     const party = parties[req.name]
     if (party) {
-      pull(party.guests, client)
+      delete party.guests[req.socketKey]
     }
   }
 }

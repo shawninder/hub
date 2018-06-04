@@ -7,12 +7,14 @@ module.exports = exports = function startParty ({ req, resolve, reject, client, 
     reject("Can't start party, it already exists!")
   } else {
     if (req.socketKey) {
-      client.on('slice', handleSlice({ client, parties }))
+      client.on('slice', handleSlice({ client, req, parties }))
       client.on('disconnect', handleHostDisconnect({ client, req, parties }))
       parties[req.name] = {
-        host: client,
-        hostKey: req.socketKey,
-        guests: [],
+        host: {
+          client,
+          key: req.socketKey
+        },
+        guests: {},
         state: req.state
       }
       resolve()

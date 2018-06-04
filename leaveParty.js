@@ -3,8 +3,8 @@ const log = require('./log')
 
 module.exports = exports = function leaveParty ({ req, resolve, reject, client, parties }) {
   if (parties[req.name]) {
-    if (parties[req.name].guests.includes(client)) {
-      pull(parties[req.name].guests, client)
+    if (parties[req.name].guests[req.socketKey]) {
+      delete parties[req.name].guests[req.socketKey]
       resolve()
       log(`${req.socketKey} left ${req.name}`)
     } else {

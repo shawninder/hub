@@ -3,7 +3,8 @@ const log = require('./log')
 module.exports = exports = function stopParty ({ req, resolve, reject, parties }) {
   const party = parties[req.name]
   if (party) {
-    party.guests.forEach((guest) => {
+    Object.keys(party.guests).forEach((guestKey) => {
+      const guest = party.guests[guestKey]
       guest.emit('dispatch', {
         type: 'Party:ended'
       })

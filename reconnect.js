@@ -8,8 +8,8 @@ module.exports = exports = function reconnect ({ req, resolve, reject, client, p
   const party = parties[req.name]
   if (party) {
     if (req.hosting) {
-      if (party.hostKey === req.socketKey) {
-        party.host = client
+      if (party.host.key === req.socketKey) {
+        party.host.client = client
         client.on('slice', handleSlice({ client, parties }))
         client.on('disconnect', handleHostDisconnect({ client, req, parties }))
         if (req.state) {
@@ -25,12 +25,12 @@ module.exports = exports = function reconnect ({ req, resolve, reject, client, p
         reject("You're not the host of this party")
       }
     } else if (req.attending) {
-      if (party.guests.includes(client)) {
+      if (party.guests[req.socketKey]) {
         resolve({ state: party.state })
       } else {
         client.on('dispatch', handleGuestDispatch({ client, req, parties }))
         client.on('disconnect', handleGuestDisconnect({ client, req, parties }))
-        party.guests.push(client)
+        party.guests[req.socketKey] = client
         resolve({
           state: party.state
         })

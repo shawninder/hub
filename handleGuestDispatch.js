@@ -13,11 +13,11 @@ module.exports = exports = function handleGuestDispatch ({ client, req, parties 
     }
     const party = parties[action.name]
     if (party) {
-      if (party.guests.includes(client)) {
+      if (party.guests[req.socketKey]) {
         // TODO search for "emit" and guard thusly?
-        if (party.host && party.host.connected) {
+        if (party.host.client && party.host.client.connected) {
           log('dispatching to host', action)
-          party.host.emit('dispatch', action)
+          party.host.client.emit('dispatch', action)
           log('dispatched', action)
         } else {
           reject("Can't reach host")

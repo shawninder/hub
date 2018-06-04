@@ -13,15 +13,29 @@ module.exports = exports = function handleSlice ({ client, parties }) {
     }
     const party = parties[action.name]
     if (party) {
-      if (party.host === client) {
+      const guestKeys = Object.keys(party.guests)
+      if (party.host.client === client) {
+        log('client match, host confirmed')
         party.state = action.slice
         log('party.state', party.state)
         log('action', action)
-        party.guests.forEach((guest) => {
+        guestKeys.forEach((guestKey) => {
+          const guest = party.guests[guestKey]
           guest.emit('slice', action.slice)
           log('emitted slice', action)
         })
-        log(`State slice forwarded to ${party.guests.length} guests`, action)
+        log(`State slice forwarded to ${guestKeys.length} guests`, action)
+      } else if (party.host.socketKey === action.socketKey) {
+        log('socketKey match, host confirmed')
+        party.state = action.slice
+        log('party.state', party.state)
+        log('action', action)
+        guestKeys.forEach((guestKey) => {
+          const guest = party.guests[guestKey]
+          guest.emit('slice', action.slice)
+          log('emitted slice', action)
+        })
+        log(`State slice forwarded to ${guestKeys.length} guests`, action)
       } else {
         reject("Can't send state slice, you're not the host!")
       }
