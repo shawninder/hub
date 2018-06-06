@@ -8,17 +8,17 @@ const reconnect = require('./reconnect')
 
 module.exports = exports = function handleRequest ({ client, parties }) {
   return (req) => {
-    log('REQUEST', req.reqName)
+    log(`Request "${req.reqName}" from "${req.socketKey}"`, req)
     const resolve = (res) => {
       const obj = {
         req,
         res
       }
+      log(`Emitting 'response' to "${req.socketKey}" for request`, req, '\nresponse', obj)
       client.emit('response', obj)
-      log('RESPONSE', obj)
     }
     const reject = (msg) => {
-      log('rejecting', msg)
+      log(`Emitting error 'response' to "${req.socketKey}" for request`, req, '\nmsg', msg)
       client.emit('response', {
         req,
         err: msg
@@ -44,7 +44,7 @@ module.exports = exports = function handleRequest ({ client, parties }) {
         reconnect({ req, resolve, reject, client, parties })
         break
       default:
-        log('Unrecognized request', req.reqName)
+        log('!Unrecognized request', req)
         reject('Unrecognized request')
         break
     }

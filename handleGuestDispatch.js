@@ -2,23 +2,21 @@ const log = require('./log')
 
 module.exports = exports = function handleGuestDispatch ({ client, req, parties }) {
   return (action) => {
-    log('GUEST DISPATCH', action)
+    log(`Guest "${req.socketKey}" dispatched`, action)
     const reject = (msg) => {
       const err = {
         msg,
         data: action
       }
+      log(`Emitting 'err' to guest "${req.socketKey}" for dispatching action`, action, '\nerr', err)
       client.emit('err', err)
-      log('rejecting', err)
     }
     const party = parties[action.name]
     if (party) {
       if (party.guests[req.socketKey]) {
-        // TODO search for "emit" and guard thusly?
         if (party.host.client && party.host.client.connected) {
-          log('dispatching to host', action)
+          log(`Emitting 'dispatch' to host "${party.host.key}", action:`, action)
           party.host.client.emit('dispatch', action)
-          log('dispatched', action)
         } else {
           reject("Can't reach host")
         }

@@ -5,6 +5,7 @@ const handleGuestDispatch = require('./handleGuestDispatch')
 const handleGuestDisconnect = require('./handleGuestDisconnect')
 
 module.exports = exports = function reconnect ({ req, resolve, reject, client, parties }) {
+  log(`Client "${req.socketKey}" reconnecting to "${req.name}"`, req)
   const party = parties[req.name]
   if (party) {
     if (req.hosting) {
@@ -21,22 +22,16 @@ module.exports = exports = function reconnect ({ req, resolve, reject, client, p
         if (party.timer) {
           clearTimeout(party.timer)
         }
+        log(`Host "${req.socketKey}" reconnected to "${req.name}", self-destruct canceled`)
       } else {
         reject("You're not the host of this party")
       }
     } else if (req.attending) {
-      if (party.guests[req.socketKey]) {
-        resolve({ state: party.state })
-      } else {
-        client.on('dispatch', handleGuestDispatch({ client, req, parties }))
-        client.on('disconnect', handleGuestDisconnect({ client, req, parties }))
-        party.guests[req.socketKey] = client
-        resolve({
-          state: party.state
-        })
-        log(`${req.socketKey} rejoined ${req.name}`)
-        resolve({ state: party.state })
-      }
+      client.on('dispatch', handleGuestDispatch({ client, req, parties }))
+      client.on('disconnect', handleGuestDisconnect({ client, req, parties }))
+      party.guests[req.socketKey] = client
+      resolve({ state: party.state })
+      log(`Guest "${req.socketKey}" rejoined "${req.name}"`)
     } else {
       resolve({
         exists: true

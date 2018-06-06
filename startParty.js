@@ -3,6 +3,7 @@ const handleSlice = require('./handleSlice')
 const handleHostDisconnect = require('./handleHostDisconnect')
 
 module.exports = exports = function startParty ({ req, resolve, reject, client, parties }) {
+  log(`Host "${req.socketKey}" wants to start a party named "${req.name}"`, req)
   if (parties[req.name]) {
     reject("Can't start party, it already exists!")
   } else {
@@ -18,7 +19,7 @@ module.exports = exports = function startParty ({ req, resolve, reject, client, 
         state: req.state
       }
       resolve()
-      log(`Started party ${req.name}`)
+      log(`Host "${req.socketKey}" started party "${req.name}"`)
     } else {
       reject("Can't start party, no socketKey")
     }
