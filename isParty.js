@@ -2,7 +2,7 @@ const log = require('./log')
 
 module.exports = exports = function isParty ({ req, resolve, parties }) {
   log(`Is "${req.name}" a valid party name?`)
-  if (parties[req.name]) {
+  if (parties[req.name_lc]) {
     resolve({
       exists: true,
       name: req.name

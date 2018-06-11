@@ -2,6 +2,7 @@ const log = require('./log')
 
 module.exports = exports = function handleGuestDispatch ({ client, req, parties }) {
   return (action) => {
+    action.name_lc = action.name.toLowerCase()
     log(`Guest "${req.socketKey}" dispatched`, action)
     const reject = (msg) => {
       const err = {
@@ -11,7 +12,7 @@ module.exports = exports = function handleGuestDispatch ({ client, req, parties 
       log(`Emitting 'err' to guest "${req.socketKey}" for dispatching action`, action, '\nerr', err)
       client.emit('err', err)
     }
-    const party = parties[action.name]
+    const party = parties[action.name_lc]
     if (party) {
       if (party.guests[req.socketKey]) {
         if (party.host.client && party.host.client.connected) {

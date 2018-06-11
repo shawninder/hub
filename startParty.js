@@ -4,13 +4,13 @@ const handleHostDisconnect = require('./handleHostDisconnect')
 
 module.exports = exports = function startParty ({ req, resolve, reject, client, parties }) {
   log(`Host "${req.socketKey}" wants to start a party named "${req.name}"`, req)
-  if (parties[req.name]) {
+  if (parties[req.name_lc]) {
     reject("Can't start party, it already exists!")
   } else {
     if (req.socketKey) {
       client.on('slice', handleSlice({ client, req, parties }))
       client.on('disconnect', handleHostDisconnect({ client, req, parties }))
-      parties[req.name] = {
+      parties[req.name_lc] = {
         host: {
           client,
           key: req.socketKey

@@ -6,7 +6,7 @@ const handleGuestDisconnect = require('./handleGuestDisconnect')
 
 module.exports = exports = function reconnect ({ req, resolve, reject, client, parties }) {
   log(`Client "${req.socketKey}" reconnecting to "${req.name}"`, req)
-  const party = parties[req.name]
+  const party = parties[req.name_lc]
   if (party) {
     if (req.hosting) {
       if (party.host.key === req.socketKey) {

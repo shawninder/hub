@@ -2,6 +2,7 @@ const log = require('./log')
 
 module.exports = exports = function handleSlice ({ client, parties }) {
   return (action) => {
+    action.name_lc = action.name.toLowerCase()
     log(`Host "${action.socketKey}" dispatched`, action)
     const reject = (msg) => {
       const err = {
@@ -11,7 +12,7 @@ module.exports = exports = function handleSlice ({ client, parties }) {
       log(`Emitting 'err' to host "${action.socketKey}" for dispatching action`, action, '\nerr', err)
       client.emit('err', err)
     }
-    const party = parties[action.name]
+    const party = parties[action.name_lc]
     if (party) {
       const guestKeys = Object.keys(party.guests)
       if (party.host.key === action.socketKey) {

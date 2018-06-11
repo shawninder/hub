@@ -3,9 +3,9 @@ const log = require('./log')
 
 module.exports = exports = function leaveParty ({ req, resolve, reject, client, parties }) {
   log(`Guest "${req.socketKey}" wants to leave "${req.name}"`)
-  if (parties[req.name]) {
-    if (parties[req.name].guests[req.socketKey]) {
-      delete parties[req.name].guests[req.socketKey]
+  if (parties[req.name_lc]) {
+    if (parties[req.name_lc].guests[req.socketKey]) {
+      delete parties[req.name_lc].guests[req.socketKey]
       resolve()
       log(`Guest "${req.socketKey}" was removed from "${req.name}"`)
     } else {
