@@ -16,7 +16,8 @@ module.exports = exports = function startParty ({ req, resolve, reject, client, 
           key: req.socketKey
         },
         guests: {},
-        state: req.state
+        state: req.state,
+        name: req.name
       }
       resolve()
       log(`Host "${req.socketKey}" started party "${req.name}"`)

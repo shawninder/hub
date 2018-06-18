@@ -15,7 +15,8 @@ module.exports = exports = function joinParty ({ req, resolve, reject, client, p
         client.on('disconnect', handleGuestDisconnect({ client, req, parties }))
         party.guests[req.socketKey] = client
         resolve({
-          state: party.state
+          state: party.state,
+          name: party.name
         })
         log(`Guest "${req.socketKey}" joined "${req.name}"`)
       } else {
