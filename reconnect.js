@@ -11,7 +11,9 @@ module.exports = exports = function reconnect ({ req, resolve, reject, client, p
     if (req.hosting) {
       if (party.host.key === req.socketKey) {
         party.host.client = client
+        client.removeAllListeners('slice')
         client.on('slice', handleSlice({ client, parties }))
+        client.removeAllListeners('disconnect')
         client.on('disconnect', handleHostDisconnect({ client, req, parties }))
         if (req.state) {
           party.state = req.state
@@ -21,13 +23,16 @@ module.exports = exports = function reconnect ({ req, resolve, reject, client, p
         }
         if (party.timer) {
           clearTimeout(party.timer)
+          log(`Host "${req.socketKey}" reconnected to "${req.name}", self-destruct canceled`)
         }
-        log(`Host "${req.socketKey}" reconnected to "${req.name}", self-destruct canceled`)
+        log(`Host "${req.socketKey}" reconnected to "${req.name}"`)
       } else {
         reject("You're not the host of this party")
       }
     } else if (req.attending) {
+      client.removeAllListeners('dispatch')
       client.on('dispatch', handleGuestDispatch({ client, req, parties }))
+      client.removeAllListeners('disconnect')
       client.on('disconnect', handleGuestDisconnect({ client, req, parties }))
       party.guests[req.socketKey] = client
       resolve({ state: party.state })
