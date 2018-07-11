@@ -18,7 +18,7 @@
   "dependencies": {
     "lodash.clonedeep": "4.5.0",
     "lodash.pull": "4.1.0",
-    "socket.io": "2.0.4"
+    "socket.io": "2.1.1"
   },
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
   "homepage": "https://github.com/shawninder/party-server#readme",
   "engines": {},
   "devDependencies": {
-    "nodemon": "1.17.3",
-    "socket.io-client": "2.1.0"
+    "nodemon": "1.17.5",
+    "socket.io-client": "2.1.1"
   }
 }
