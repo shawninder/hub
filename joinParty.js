@@ -5,8 +5,8 @@ const handleGuestDisconnect = require('./handleGuestDisconnect')
 module.exports = exports = function joinParty ({ req, resolve, reject, client, parties }) {
   log(`Guest "${req.socketKey}" wants to join "${req.name}"`)
   const party = parties[req.name_lc]
-  const guestKeys = Object.keys(party.guests)
   if (party) {
+    const guestKeys = Object.keys(party.guests)
     if (party.guests[req.socketKey]) {
       reject("Can't join party, you're already attending")
     } else {

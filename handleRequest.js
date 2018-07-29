@@ -9,7 +9,7 @@ const reconnect = require('./reconnect')
 module.exports = exports = function handleRequest ({ client, parties }) {
   return (req) => {
     log(`Request "${req.reqName}" from "${req.socketKey}"`, req)
-    req.name_lc = req.name.toLowerCase()
+    req.name_lc = req.name ? req.name.toLowerCase() : ''
     const resolve = (res) => {
       const obj = {
         req,
