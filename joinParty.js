@@ -3,10 +3,13 @@ const handleGuestDispatch = require('./handleGuestDispatch')
 const handleGuestDisconnect = require('./handleGuestDisconnect')
 
 module.exports = exports = function joinParty ({ req, resolve, reject, client, parties }) {
-  log(`Guest "${req.socketKey}" wants to join "${req.name}"`)
+  log({
+    name: 'Guest wants to join',
+    guest: req.socketKey,
+    party: req.name
+  })
   const party = parties[req.name_lc]
   if (party) {
-    const guestKeys = Object.keys(party.guests)
     if (party.guests[req.socketKey]) {
       reject("Can't join party, you're already attending")
     } else {
@@ -18,7 +21,11 @@ module.exports = exports = function joinParty ({ req, resolve, reject, client, p
           state: party.state,
           name: party.name
         })
-        log(`Guest "${req.socketKey}" joined "${req.name}"`)
+        log({
+          name: 'Guest joined',
+          guest: req.socketKey,
+          party: req.name
+        })
       } else {
         reject("Can't join party, missing `socketKey`")
       }

@@ -3,20 +3,33 @@ const log = require('./log')
 module.exports = exports = function handleGuestDispatch ({ client, req, parties }) {
   return (action) => {
     action.name_lc = action.name.toLowerCase()
-    log(`Guest "${req.socketKey}" dispatched`, action)
+    log({
+      name: 'Guest dispatched an action',
+      action,
+      guest: req.socketKey
+    })
     const reject = (msg) => {
       const err = {
         msg,
         data: action
       }
-      log(`Emitting 'err' to guest "${req.socketKey}" for dispatching action`, action, '\nerr', err)
+      log({
+        name: 'Guest dispatch failed',
+        msg,
+        action,
+        guest: req.socketKey
+      })
       client.emit('err', err)
     }
     const party = parties[action.name_lc]
     if (party) {
       if (party.guests[req.socketKey]) {
         if (party.host.client && party.host.client.connected) {
-          log(`Emitting 'dispatch' to host "${party.host.key}", action:`, action)
+          log({
+            name: 'Forwarding dispatch to host',
+            host: party.host.key,
+            action
+          })
           party.host.client.emit('dispatch', action)
         } else {
           reject("Can't reach host")

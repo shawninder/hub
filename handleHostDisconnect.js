@@ -6,9 +6,18 @@ const ms = 20 * 60 * 1000
 module.exports = exports = function handleHostDisconnect ({ client, req, parties }) {
   return () => {
     const party = parties[req.name_lc]
-    log(`Host "${req.socketKey}" ("${client.id}") disconnected`, party ? `from existing party ${req.name}` : undefined)
+    log({
+      name: 'Host disconnected',
+      client: client.id,
+      wasHosting: req.name,
+      host: req.socketKey
+    })
     if (party) {
-      log(`Initiating self destruct of "${req.name}" in ${ms}ms`)
+      log({
+        name: 'Initiating party self-destruct',
+        party: req.name,
+        in: ms
+      })
       party.timer = setTimeout(() => {
         // TODO separate the various concerns out of functions like stopParty
         stopParty({ req, resolve: () => {}, reject: log, parties })

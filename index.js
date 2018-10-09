@@ -10,4 +10,7 @@ io.on('connection', (client) => {
 })
 io.listen(port)
 
-log(`Listening for websocket connections on port ${port}`)
+log({
+  name: 'Server started',
+  port
+})

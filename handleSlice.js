@@ -4,14 +4,22 @@ module.exports = exports = function handleSlice ({ client, parties }) {
   return (action) => {
     action.name_lc = action.name.toLowerCase()
     if (action.type !== 'Party:slice') {
-      log(`Host "${action.socketKey}" dispatched`, action)
+      log({
+        name: 'Host dispatch',
+        from: action.socketKey,
+        action
+      })
     }
     const reject = (msg) => {
       const err = {
         msg,
         data: action
       }
-      log(`Emitting 'err' to host "${action.socketKey}" for dispatching action`, action, '\nerr', err)
+      log({
+        name: 'Host dispatch failed',
+        action,
+        err
+      })
       client.emit('err', err)
     }
     const party = parties[action.name_lc]
@@ -21,12 +29,13 @@ module.exports = exports = function handleSlice ({ client, parties }) {
         party.state = action.slice
         guestKeys.forEach((guestKey) => {
           const guest = party.guests[guestKey]
-          log(`Emitting 'slice' to guest "${guestKey}"`, action.slice)
+          log({
+            name: 'Emitting slice',
+            to: guestKey,
+            slice: action.slice
+          })
           guest.emit('slice', action.slice)
         })
-        if (guestKeys.length > 0) {
-          log(`reached "${guestKeys.length}" guests`)
-        }
       } else {
         reject("Can't send state slice, you're not the host!")
       }

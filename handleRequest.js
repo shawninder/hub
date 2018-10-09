@@ -8,18 +8,33 @@ const reconnect = require('./reconnect')
 
 module.exports = exports = function handleRequest ({ client, parties }) {
   return (req) => {
-    log(`Request "${req.reqName}" from "${req.socketKey}"`, req)
+    log({
+      name: 'Request',
+      reqName: req.reqName,
+      from: req.socketKey,
+      req
+    })
     req.name_lc = req.name ? req.name.toLowerCase() : ''
     const resolve = (res) => {
       const obj = {
         req,
         res
       }
-      log(`Emitting 'response' to "${req.socketKey}" for request`, req, '\nresponse', obj)
+      log({
+        name: 'Response',
+        to: req.socketKey,
+        req,
+        response: obj
+      })
       client.emit('response', obj)
     }
     const reject = (msg) => {
-      log(`Emitting error 'response' to "${req.socketKey}" for request`, req, '\nmsg', msg)
+      log({
+        name: 'Error response',
+        to: req.socketKey,
+        req,
+        msg
+      })
       client.emit('response', {
         req,
         err: msg
@@ -45,7 +60,12 @@ module.exports = exports = function handleRequest ({ client, parties }) {
         reconnect({ req, resolve, reject, client, parties })
         break
       default:
-        log('!Unrecognized request', req)
+        log({
+          name: 'Unrecognized request',
+          reqName: req.reqName,
+          from: req.socketKey,
+          req
+        })
         reject('Unrecognized request')
         break
     }
