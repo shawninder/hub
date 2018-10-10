@@ -4,6 +4,7 @@
   "description": "Server for creating \"parties\" of shared state with one host and multiple guests",
   "main": "index.js",
   "scripts": {
+    "lint": "standard",
     "test": "jest",
     "dev": "NODE_ENV=dev nodemon --inspect index.js",
     "debug": "NODE_ENV=DEBUG nodemon --inspect index.js",
