@@ -9,7 +9,8 @@
     "dev": "NODE_ENV=dev nodemon --inspect index.js",
     "debug": "NODE_ENV=DEBUG nodemon --inspect index.js",
     "start": "node index.js",
-    "deploy": "now --dotenv --public"
+    "deploy": "now --dotenv --public",
+    "relock": "rm -rf node_modules package-lock.json && npm install"
   },
   "author": "Shawn Inder <shawninder@gmail.com>",
   "contributors": [
