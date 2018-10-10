@@ -26,6 +26,6 @@ const database = data({
 })
 module.exports = exports = (event) => {
   return database.use((db) => {
-    return db.collection('events').insert(event)
+    return db.collection('events').insertOne(event)
   })
 }
