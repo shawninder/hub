@@ -1,6 +1,6 @@
 {
   "name": "party-server",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Server for creating \"parties\" of shared state with one host and multiple guests",
   "main": "index.js",
   "scripts": {
