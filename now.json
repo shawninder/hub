@@ -1,0 +1,9 @@
+{
+  "env": {
+    "ATLAS_HUB_USERNAME": "@atlas-hub-username",
+    "ATLAS_HUB_PASSWORD": "@atlas-hub-password",
+    "ATLAS_HOSTS": "@atlas-hosts",
+    "ATLAS_DATABASE": "@atlas-database",
+    "ATLAS_REPLICA_SET": "@atlas-replica-set"
+  }
+}
