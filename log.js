@@ -1,4 +1,4 @@
-const data = require('data')
+const Data = require('data')
 let username
 let password
 let hosts
@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'production') {
   databaseName = process.env.MONGO_DATABASE
   replicaSet = process.env.MONGO_REPLICA_SET
 }
-const database = data({
+const data = new Data({
   username,
   password,
   hosts,
@@ -25,7 +25,7 @@ const database = data({
   replicaSet
 })
 module.exports = exports = (event) => {
-  return database.use((db) => {
+  return data.use(({ db }) => {
     return db.collection('events').insertOne(event)
   })
 }
