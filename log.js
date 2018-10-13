@@ -29,8 +29,19 @@ const data = new Data({
   databaseName,
   replicaSet
 })
-module.exports = exports = (event) => {
-  return data.use(({ db }) => {
-    return db.collection('events').insertOne(event)
-  })
+module.exports = exports = async (event) => {
+  try {
+    await data.use(({ db }) => {
+      return db.collection('events').insertOne(event)
+    })
+  } catch (ex) {
+    if (process.env.NODE_ENV === 'production') {
+      // ignore :(
+    } else {
+      console.log('Unable to log', ex, 'event:', event)
+    }
+  }
+  // return data.use(({ db }) => {
+  //   return db.collection('events').insertOne(event)
+  // })
 }

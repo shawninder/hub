@@ -1,5 +1,5 @@
 {
-  "name": "party-server",
+  "name": "hub",
   "version": "0.4.16",
   "description": "Server for creating \"parties\" of shared state with one host and multiple guests",
   "main": "index.js",
@@ -23,12 +23,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shawninder/party-server.git"
+    "url": "git+https://github.com/shawninder/hub.git"
   },
   "bugs": {
-    "url": "https://github.com/shawninder/party-server/issues"
+    "url": "https://github.com/shawninder/hub/issues"
   },
-  "homepage": "https://github.com/shawninder/party-server#readme",
+  "homepage": "https://github.com/shawninder/hub#readme",
   "engines": {},
   "devDependencies": {
     "nodemon": "1.17.5",
