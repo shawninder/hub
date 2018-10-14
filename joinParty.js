@@ -11,7 +11,7 @@ module.exports = exports = function joinParty ({ req, resolve, reject, client, p
   const party = parties[req.name_lc]
   if (party) {
     if (party.guests[req.socketKey]) {
-      reject("Can't join party, you're already attending")
+      reject({ name: "Can't join party, you're already attending" })
     } else {
       if (req.socketKey) {
         client.on('dispatch', handleGuestDispatch({ client, req, parties }))
@@ -27,10 +27,10 @@ module.exports = exports = function joinParty ({ req, resolve, reject, client, p
           party: req.name
         })
       } else {
-        reject("Can't join party, missing `socketKey`")
+        reject({ name: "Can't join party, missing `socketKey`" })
       }
     }
   } else {
-    reject("Can't join party, it doesn't exist!")
+    reject({ name: "Can't join party, it doesn't exist!" })
   }
 }

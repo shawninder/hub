@@ -37,10 +37,10 @@ module.exports = exports = function handleSlice ({ client, parties }) {
           guest.emit('slice', action.slice)
         })
       } else {
-        reject("Can't send state slice, you're not the host!")
+        reject({ name: "Can't send state slice, you're not the host!" })
       }
     } else {
-      reject("Can't send state slice, party doesn't exist!")
+      reject({ name: "Can't send state slice, party doesn't exist!" })
     }
   }
 }

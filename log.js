@@ -1,38 +1,20 @@
 const Data = require('data')
-let username
-let password
-let cluster
-let hosts
-let databaseName
-let replicaSet
-
-if (process.env.NODE_ENV === 'production') {
-  username = process.env.ATLAS_HUB_USERNAME
-  password = process.env.ATLAS_HUB_PASSWORD
-  cluster = process.env.ATLAS_CLUSTER
-  hosts = process.env.ATLAS_HOSTS
-  databaseName = process.env.ATLAS_DATABASE
-  replicaSet = process.env.ATLAS_REPLICA_SET
-} else {
-  username = process.env.MONGO_HUB_USERNAME
-  password = process.env.MONGO_HUB_PASSWORD
-  cluster = process.env.MONGO_CLUSTER
-  hosts = process.env.MONGO_HOSTS
-  databaseName = process.env.MONGO_DATABASE
-  replicaSet = process.env.MONGO_REPLICA_SET
+const pkg = require('./package.json')
+const env = process.env.NODE_ENV === 'production'
+const config = {
+  username: env ? process.env.ATLAS_HUB_USERNAME : process.env.MONGO_HUB_USERNAME,
+  password: env ? process.env.ATLAS_HUB_PASSWORD : process.env.MONGO_HUB_PASSWORD,
+  cluster: env ? process.env.ATLAS_CLUSTER : process.env.MONGO_CLUSTER,
+  hosts: env ? process.env.ATLAS_HOSTS : process.env.MONGO_HOSTS,
+  databaseName: env ? process.env.ATLAS_DATABASE : process.env.MONGO_DATABASE,
+  replicaSet: env ? process.env.ATLAS_REPLICA_SET : process.env.MONGO_REPLICA_SET
 }
-const data = new Data({
-  username,
-  password,
-  cluster,
-  hosts,
-  databaseName,
-  replicaSet
-})
+const data = new Data(config)
+
 module.exports = exports = async (event) => {
   try {
     await data.use(({ db }) => {
-      return db.collection('events').insertOne(event)
+      return db.collection('events').insertOne({ origin: { name: pkg.name }, ...event })
     })
   } catch (ex) {
     if (process.env.NODE_ENV === 'production') {

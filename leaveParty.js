@@ -16,9 +16,9 @@ module.exports = exports = function leaveParty ({ req, resolve, reject, client, 
         party: req.name
       })
     } else {
-      reject("Can't leave party, you're not attending!")
+      reject({ name: "Can't leave party, you're not attending!" })
     }
   } else {
-    reject(`Can't leave party "${req.name}", it doesn't exist!`)
+    reject({ name: `Can't leave party "${req.name}", it doesn't exist!` })
   }
 }

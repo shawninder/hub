@@ -32,13 +32,27 @@ module.exports = exports = function handleGuestDispatch ({ client, req, parties 
           })
           party.host.client.emit('dispatch', action)
         } else {
-          reject("Can't reach host")
+          reject({
+            name: "Can't reach host",
+            party: req.name,
+            action,
+            guest: req.socketKey,
+            host: party.host
+          })
         }
       } else {
-        reject("Can't dispatch guest action, you're not attending!")
+        reject({
+          name: "Can't dispatch guest action, you're not attending!",
+          party: req.name,
+          guest: req.socketKey
+        })
       }
     } else {
-      reject("Can't dispatch guest action, party doesn't exist!")
+      reject({
+        name: "Can't dispatch guest action, party doesn't exist!",
+        party: req.name,
+        guest: req.socketKey
+      })
     }
   }
 }

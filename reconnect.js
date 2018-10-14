@@ -40,7 +40,7 @@ module.exports = exports = function reconnect ({ req, resolve, reject, client, p
           party: req.name
         })
       } else {
-        reject("You're not the host of this party")
+        reject({ name: "You're not the host of this party" })
       }
     } else if (req.attending) {
       client.removeAllListeners('dispatch')
@@ -60,6 +60,6 @@ module.exports = exports = function reconnect ({ req, resolve, reject, client, p
       })
     }
   } else {
-    reject("Party doesn't exist")
+    reject({ name: "Party doesn't exist" })
   }
 }

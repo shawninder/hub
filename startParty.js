@@ -10,7 +10,7 @@ module.exports = exports = function startParty ({ req, resolve, reject, client, 
     req
   })
   if (parties[req.name_lc]) {
-    reject("Can't start party, it already exists!")
+    reject({ name: "Can't start party, it already exists!" })
   } else {
     if (req.socketKey) {
       client.on('slice', handleSlice({ client, req, parties }))
@@ -31,7 +31,7 @@ module.exports = exports = function startParty ({ req, resolve, reject, client, 
         party: req.name
       })
     } else {
-      reject("Can't start party, no socketKey")
+      reject({ name: "Can't start party, no socketKey" })
     }
   }
 }

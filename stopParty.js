@@ -27,6 +27,9 @@ module.exports = exports = function stopParty ({ req, resolve, reject, parties }
       party: req.name
     })
   } else {
-    reject("Can't stop party, it doesn't exist!")
+    reject({
+      name: "Can't stop party, it doesn't exist!",
+      party: req.name
+    })
   }
 }

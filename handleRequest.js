@@ -60,13 +60,12 @@ module.exports = exports = function handleRequest ({ client, parties }) {
         reconnect({ req, resolve, reject, client, parties })
         break
       default:
-        log({
+        reject({
           name: 'Unrecognized request',
           reqName: req.reqName,
           from: req.socketKey,
           req
         })
-        reject('Unrecognized request')
         break
     }
   }
