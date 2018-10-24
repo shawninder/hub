@@ -26,7 +26,7 @@ module.exports = exports = function handleSlice ({ client, parties }) {
     if (party) {
       if (party.host.key === action.socketKey) {
         const guestKeys = Object.keys(party.guests)
-        party.state = action.slice
+        party.state = Object.assign(party.state, action.slice)
         guestKeys.forEach((guestKey) => {
           const guest = party.guests[guestKey]
           log({

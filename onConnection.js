@@ -6,7 +6,7 @@ const handleGetDetails = require('./handleGetDetails')
 module.exports = exports = function onConnection ({ client, parties }) {
   log({
     name: 'Client connect',
-    client: client.id
+    client: String(client.id)
   })
   client.on('request', handleRequest({ client, parties }))
   client.on('slice', handleSlice({ client, parties }))

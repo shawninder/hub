@@ -5,7 +5,7 @@ module.exports = exports = function handleGuestDisconnect ({ client, req, partie
     log({
       name: 'Guest disconnected',
       party: req.name,
-      client: client.id,
+      client: String(client.id),
       guest: req.socketKey
     })
     const party = parties[req.name_lc]

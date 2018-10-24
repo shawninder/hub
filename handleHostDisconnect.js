@@ -8,7 +8,7 @@ module.exports = exports = function handleHostDisconnect ({ client, req, parties
     const party = parties[req.name_lc]
     log({
       name: 'Host disconnected',
-      client: client.id,
+      client: String(client.id),
       wasHosting: req.name,
       host: req.socketKey
     })

@@ -36,8 +36,8 @@ module.exports = exports = function handleGuestDispatch ({ client, req, parties 
             name: "Can't reach host",
             party: req.name,
             action,
-            guest: req.socketKey,
-            host: party.host
+            guest: req.socketKey
+            // host: party.host
           })
         }
       } else {
