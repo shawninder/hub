@@ -1,6 +1,7 @@
 const log = require('./log')
 const handleGuestDispatch = require('./handleGuestDispatch')
 const handleGuestDisconnect = require('./handleGuestDisconnect')
+const handleGuestFileChunk = require('./handleGuestFileChunk')
 
 module.exports = exports = function joinParty ({ req, resolve, reject, client, parties }) {
   log({
@@ -16,6 +17,7 @@ module.exports = exports = function joinParty ({ req, resolve, reject, client, p
       if (req.socketKey) {
         client.on('dispatch', handleGuestDispatch({ client, req, parties }))
         client.on('disconnect', handleGuestDisconnect({ client, req, parties }))
+        client.on('file-transfer-chunk', handleGuestFileChunk({ client, req, parties }))
         party.guests[req.socketKey] = client
         resolve({
           state: party.state,

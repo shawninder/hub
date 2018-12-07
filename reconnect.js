@@ -3,6 +3,9 @@ const handleSlice = require('./handleSlice')
 const handleHostDisconnect = require('./handleHostDisconnect')
 const handleGuestDispatch = require('./handleGuestDispatch')
 const handleGuestDisconnect = require('./handleGuestDisconnect')
+const handleGuestFileChunk = require('./handleGuestFileChunk')
+const handleHostRequestChunk = require('./handleHostRequestChunk')
+const handleHostGotFile = require('./handleHostGotFile')
 
 module.exports = exports = function reconnect ({ req, resolve, reject, client, parties }) {
   log({
@@ -20,6 +23,10 @@ module.exports = exports = function reconnect ({ req, resolve, reject, client, p
         client.on('slice', handleSlice({ client, parties }))
         client.removeAllListeners('disconnect')
         client.on('disconnect', handleHostDisconnect({ client, req, parties }))
+        client.removeAllListeners('requestChunk')
+        client.on('requestChunk', handleHostRequestChunk({ client, req, parties }))
+        client.removeAllListeners('gotFile')
+        client.on('gotFile', handleHostGotFile({ client, req, parties }))
         if (req.state) {
           party.state = req.state
           resolve()
@@ -45,6 +52,8 @@ module.exports = exports = function reconnect ({ req, resolve, reject, client, p
     } else if (req.attending) {
       client.removeAllListeners('dispatch')
       client.on('dispatch', handleGuestDispatch({ client, req, parties }))
+      client.removeAllListeners('file-transfer-chunk')
+      client.on('file-transfer-chunk', handleGuestFileChunk({ client, req, parties }))
       client.removeAllListeners('disconnect')
       client.on('disconnect', handleGuestDisconnect({ client, req, parties }))
       party.guests[req.socketKey] = client

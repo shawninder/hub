@@ -1,6 +1,8 @@
 const log = require('./log')
 const handleSlice = require('./handleSlice')
 const handleHostDisconnect = require('./handleHostDisconnect')
+const handleHostRequestChunk = require('./handleHostRequestChunk')
+const handleHostGotFile = require('./handleHostGotFile')
 
 module.exports = exports = function startParty ({ req, resolve, reject, client, parties }) {
   log({
@@ -15,6 +17,8 @@ module.exports = exports = function startParty ({ req, resolve, reject, client, 
     if (req.socketKey) {
       client.on('slice', handleSlice({ client, req, parties }))
       client.on('disconnect', handleHostDisconnect({ client, req, parties }))
+      client.on('requestChunk', handleHostRequestChunk({ client, req, parties }))
+      client.on('gotFile', handleHostGotFile({ client, req, parties }))
       parties[req.name_lc] = {
         host: {
           client,
