@@ -18,7 +18,7 @@
   ],
   "license": "GPL-3.0",
   "dependencies": {
-    "data": "https://github.com/shawninder/data.git",
+    "data": "git+https://github.com/shawninder/data.git",
     "socket.io": "2.1.1"
   },
   "repository": {
