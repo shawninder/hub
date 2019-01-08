@@ -1,5 +1,7 @@
 {
+  "version": 1,
   "env": {
+    "NODE_ENV": "production",
     "ATLAS_HUB_USERNAME": "@atlas-hub-username",
     "ATLAS_HUB_PASSWORD": "@atlas-hub-password",
     "ATLAS_CLUSTER": "@atlas-cluster",

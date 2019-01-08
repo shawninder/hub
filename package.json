@@ -9,7 +9,7 @@
     "dev": "NODE_ENV=dev nodemon --inspect index.js",
     "debug": "NODE_ENV=DEBUG nodemon --inspect index.js",
     "start": "node index.js",
-    "deploy": "now --dotenv --public",
+    "deploy": "now --public",
     "relock": "rm -rf node_modules package-lock.json && npm install"
   },
   "author": "Shawn Inder <shawninder@gmail.com>",
@@ -31,7 +31,7 @@
   "homepage": "https://github.com/shawninder/hub#readme",
   "engines": {},
   "devDependencies": {
-    "nodemon": "1.17.5",
+    "nodemon": "1.18.9",
     "standard": "12.0.1"
   }
 }
