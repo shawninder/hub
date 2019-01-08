@@ -1,5 +1,8 @@
 {
-  "version": 1,
+  "version": 2,
+  "builds": [
+    { "src": "index.js", "use": "@now/node-server" }
+  ],
   "env": {
     "NODE_ENV": "production",
     "ATLAS_HUB_USERNAME": "@atlas-hub-username",
