@@ -1,6 +1,6 @@
 {
   "name": "hub",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Server for creating \"parties\" of shared state with one host and multiple guests",
   "main": "index.js",
   "scripts": {
