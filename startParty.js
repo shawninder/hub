@@ -28,7 +28,7 @@ module.exports = exports = function startParty ({ req, resolve, reject, client, 
         state: req.state,
         name: req.name
       }
-      resolve()
+      resolve({ queryString: `?name=${req.name_lc}` })
       log({
         name: 'Host started party',
         host: req.socketKey,
