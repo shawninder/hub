@@ -19,6 +19,7 @@
   "license": "GPL-3.0",
   "dependencies": {
     "data": "git+https://github.com/shawninder/data.git",
+    "lodash.merge": "4.6.1",
     "socket.io": "2.1.1"
   },
   "repository": {

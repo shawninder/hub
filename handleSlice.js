@@ -1,3 +1,4 @@
+const merge = require('lodash.merge')
 const log = require('./log')
 
 module.exports = exports = function handleSlice ({ client, parties }) {
@@ -26,7 +27,7 @@ module.exports = exports = function handleSlice ({ client, parties }) {
     if (party) {
       if (party.host.key === action.socketKey) {
         const guestKeys = Object.keys(party.guests)
-        party.state = Object.assign(party.state, action.slice)
+        party.state = merge(party.state, action.slice)
         guestKeys.forEach((guestKey) => {
           const guest = party.guests[guestKey]
           log({
